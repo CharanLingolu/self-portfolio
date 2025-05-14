@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-require("dotenv").config();
+require("dotenv").config(); // Load environment variables from .env file
 
 const app = express();
 
@@ -12,7 +12,9 @@ app.use(express.json());
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("✅ DB connected"))
-  .catch(err => console.error("❌ DB connection error:", err));
+  .catch(err => {
+    console.error("❌ DB connection error:", err.message); // More detailed error logging
+  });
 
 // Define Schema & Model
 const ContactSchema = new mongoose.Schema({
@@ -46,7 +48,7 @@ app.post("/api/contact", async (req, res) => {
     res.status(201).json({ message: "Message sent successfully!" });
 
   } catch (err) {
-    console.error("❌ Error saving to MongoDB:", err);
+    console.error("❌ Error saving to MongoDB:", err.message); // More detailed error logging
     res.status(500).json({ error: "Error saving contact info" });
   }
 });
