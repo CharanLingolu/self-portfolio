@@ -9,11 +9,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+// MongoDB Connection (cleaned up)
+mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log("✅ DB connected"))
   .catch(err => {
-    console.error("❌ DB connection error:", err.message); // More detailed error logging
+    console.error("❌ DB connection error:", err.message);
   });
 
 // Define Schema & Model
@@ -48,7 +48,7 @@ app.post("/api/contact", async (req, res) => {
     res.status(201).json({ message: "Message sent successfully!" });
 
   } catch (err) {
-    console.error("❌ Error saving to MongoDB:", err.message); // More detailed error logging
+    console.error("❌ Error saving to MongoDB:", err.message);
     res.status(500).json({ error: "Error saving contact info" });
   }
 });
