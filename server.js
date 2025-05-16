@@ -1,15 +1,18 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-require("dotenv").config(); // Load environment variables from .env file
+require("dotenv").config(); // Load environment variables
 
 const app = express();
+
+// ✅ Log Mongoose version
+console.log("✅ Mongoose version:", mongoose.version);
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Connection (cleaned up)
+// ✅ MongoDB Connection (modern)
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log("✅ DB connected"))
   .catch(err => {
@@ -24,10 +27,8 @@ const ContactSchema = new mongoose.Schema({
   phoneno: String
 });
 
-// Clear model cache to prevent overwrite in dev
-mongoose.models = {};
-
-// Recreate the model after clearing cache
+// ✅ Prevent Overwrite in Dev (Optional but Safe)
+mongoose.models = mongoose.models || {};
 const Contact = mongoose.models.Contact || mongoose.model("Contact", ContactSchema);
 
 // POST route for Contact Form
@@ -40,7 +41,6 @@ app.post("/api/contact", async (req, res) => {
       return res.status(400).json({ error: "All fields are required" });
     }
 
-    // Save to MongoDB
     const contact = new Contact({ name, email, message, phoneno });
     await contact.save();
 
