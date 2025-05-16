@@ -31,6 +31,11 @@ const ContactSchema = new mongoose.Schema({
 mongoose.models = mongoose.models || {};
 const Contact = mongoose.models.Contact || mongoose.model("Contact", ContactSchema);
 
+// ✅ Add root GET route to respond to "/"
+app.get("/", (req, res) => {
+  res.send("Welcome to my portfolio backend!");
+});
+
 // POST route for Contact Form
 app.post("/api/contact", async (req, res) => {
   try {
@@ -51,6 +56,11 @@ app.post("/api/contact", async (req, res) => {
     console.error("❌ Error saving to MongoDB:", err.message);
     res.status(500).json({ error: "Error saving contact info" });
   }
+});
+
+// Optional: 404 handler for unknown routes
+app.use((req, res) => {
+  res.status(404).send("404 Not Found");
 });
 
 // Start Server
